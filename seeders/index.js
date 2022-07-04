@@ -1,32 +1,34 @@
-const User = require("../app/usecase/user/model")
 const bcrypt = require("bcryptjs")
+const User = require("../app/usecase/user/model")
 
-let salt
-(async function saltBcrypt() {
-    salt = await bcrypt.genSalt(10);
-})()
+require("dotenv").config()
+const mongoose = require("mongoose");
 
-const data = async () => [
-    {
-        email: "admin@email.com",
-        password: await bcrypt.hash("password", salt),
-        username: "admin",
-        role: "admin"
-    },
-    {
-        email: "user@email.com",
-        password: await bcrypt.hash("password", salt),
-        username: "user",
-        role: "user"
-    }
-]
+mongoose.connect(process.env.MONGO_URL, {
+    useUnifiedTopology: true,
+    //   useFindAndModify: true,
+    //   useCreateIndex: true,
+});
 
-    (async function run() {
-        try {
-            await User(await data())
-            await User.save()
-            console.log("User seeders success created");
-        } catch (error) {
-            console.log(error);
+mongoose.connection;
+
+(async function seedData() {
+    const salt = await bcrypt.genSalt(10);
+    let data = [
+        {
+            email: "admin@email.com",
+            password: await bcrypt.hash("password", salt),
+            username: "admin",
+            role: "admin"
+        },
+        {
+            email: "user@email.com",
+            password: await bcrypt.hash("password", salt),
+            username: "user",
+            role: "user"
         }
-    })()
+    ]
+    User.create(data)
+        .then(() => console.log(`Success seed`))
+        .catch((err) => console.log(err.message))
+})()
