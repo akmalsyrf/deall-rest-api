@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: deall-rest-api
+spec:
+  containers:
+    - name: deall-rest-api
+      image: deall-rest-api
+      ports:
+        - containerPort: 3000

@@ -3,8 +3,9 @@
 	"version": "0.0.0",
 	"private": true,
 	"scripts": {
-		"start": "nodemon ./bin/www",
-		"prod": "node ./bin/www"
+		"start": "node ./bin/www",
+		"dev": "nodemon ./bin/www",
+		"seed": "node ./seeders/index.js"
 	},
 	"dependencies": {
 		"bcryptjs": "^2.4.3",
@@ -14,6 +15,8 @@
 		"ejs": "~2.6.1",
 		"express": "~4.16.1",
 		"http-errors": "~1.6.3",
+		"joi": "^17.6.0",
+		"jsonwebtoken": "^8.5.1",
 		"mongoose": "^6.4.2",
 		"morgan": "~1.9.1"
 	},

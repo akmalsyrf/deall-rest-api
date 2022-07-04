@@ -1,11 +1,22 @@
-var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+require("dotenv").config()
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const mongoose = require("mongoose");
+
+mongoose.connect(process.env.MONGO_URL, {
+  useUnifiedTopology: true,
+  //   useFindAndModify: true,
+  //   useCreateIndex: true,
+});
+
+mongoose.connection;
+
+const indexRoute = require("./routes/index")
+const authRouter = require("./app/usecase/auth/router")
+const userRouter = require("./app/usecase/user/router")
 
 var app = express();
 
@@ -19,23 +30,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+const baseURL = '/api/v1'
+app.use(indexRoute)
+app.use(baseURL, authRouter);
+app.use(baseURL, userRouter);
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
-});
-
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
+// not found
+app.use((_, res) => res.sendStatus(404));
 
 module.exports = app;
