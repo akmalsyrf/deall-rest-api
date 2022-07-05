@@ -44,7 +44,7 @@ exports.register = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        const createUser = await User({ email, username, password: hashedPassword, role }).select(['-password'])
+        const createUser = await User({ email, username, password: hashedPassword, role })
         await createUser.save()
 
         const dataToken = {
@@ -56,7 +56,7 @@ exports.register = async (req, res) => {
         const token = jwt.sign(dataToken, process.env.TOKEN_API);
 
         res.status(200).json({
-            status: "success register user",
+            status: "success register",
             data: { token, user: createUser }
         })
     } catch (error) {
@@ -108,7 +108,7 @@ exports.login = async (req, res) => {
         const token = jwt.sign(dataToken, process.env.TOKEN_API);
 
         res.status(200).json({
-            status: "success login user",
+            status: "success login",
             data: { token, user: userExist }
         })
     } catch (error) {
