@@ -32,7 +32,7 @@ exports.register = async (req, res) => {
     try {
         const { email, username, password, role } = req.body
 
-        const userExist = await User.findOne({ where: { email } })
+        const userExist = await User.findOne({ email }).select(['-password'])
         if (userExist) {
             return res.status(400).json({
                 success: false,
@@ -44,7 +44,7 @@ exports.register = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        const createUser = await User({ email, username, password: hashedPassword, role })
+        const createUser = await User({ email, username, password: hashedPassword, role }).select(['-password'])
         await createUser.save()
 
         const dataToken = {
@@ -83,7 +83,7 @@ exports.login = async (req, res) => {
     try {
         const { username, password } = req.body
 
-        const userExist = await User.findOne({ where: { username } })
+        let userExist = await User.findOne({ username })
         if (!userExist) {
             return res.status(400).json({
                 success: false,
@@ -125,7 +125,7 @@ exports.refreshToken = async (req, res) => {
         const dataToken = req.users
         const token = jwt.sign(dataToken, process.env.TOKEN_API);
 
-        const user = await User.findOne({ where: { _id: dataToken._id } })
+        const user = await User.findOne({ _id: dataToken._id }).select(['-password'])
         if (!user) {
             return res.status(400).json({
                 status: "failed",

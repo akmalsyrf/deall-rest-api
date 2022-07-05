@@ -10,4 +10,4 @@ ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.6.0/wait
 RUN chmod +x /wait
 
 RUN npm install
-CMD /wait && npm start
+CMD /wait && npm run seed && npm start

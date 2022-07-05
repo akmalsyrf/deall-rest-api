@@ -29,6 +29,12 @@ mongoose.connection;
         }
     ]
     User.create(data)
-        .then(() => console.log(`Success seed`))
-        .catch((err) => console.log(err.message))
+        .then(() => {
+            console.log(`Success seed`)
+            mongoose.disconnect()
+        })
+        .catch((err) => {
+            console.log(err.message)
+            mongoose.disconnect()
+        })
 })()
