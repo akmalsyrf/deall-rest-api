@@ -43,3 +43,7 @@
 ### <b>6. Cek apakah kedua container sudah terhubung di network yang sama</b>
 
 ![img1](public/images/6.JPG)
+
+### <b>7. REST API sudah berjalan di docker container</b>
+
+![img1](public/images/7.JPG)
